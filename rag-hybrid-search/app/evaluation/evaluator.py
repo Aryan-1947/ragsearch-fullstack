@@ -1,5 +1,4 @@
 import json
-import pandas as pd
 from datetime import datetime
 from pathlib import Path
 from rich.console import Console
@@ -104,20 +103,21 @@ def run_evaluation(
         )
 
     # Aggregate metrics
-    df = pd.DataFrame(results)
+    # Aggregate metrics
+    n = len(results)
     summary = {
-        "strategy": strategy_label,
-        "mode": mode,
-        "reranker": use_reranker,
-        "timestamp": datetime.now().isoformat(),
-        "total_questions": len(results),
-        "avg_correctness": round(df["correctness_score"].mean(), 3),
-        "pct_correct": round(df["correctness_correct"].mean() * 100, 1),
-        "avg_faithfulness": round(df["faithfulness"].mean(), 3),
-        "avg_retrieval_relevance": round(df["retrieval_relevance"].mean(), 3),
-        "avg_confidence": round(df["confidence_composite"].mean(), 3),
-        "results": results,
-    }
+    "strategy": strategy_label,
+    "mode": mode,
+    "reranker": use_reranker,
+    "timestamp": datetime.now().isoformat(),
+    "total_questions": n,
+    "avg_correctness": round(sum(r["correctness_score"] for r in results) / n, 3),
+    "pct_correct": round(sum(1 for r in results if r["correctness_correct"]) / n * 100, 1),
+    "avg_faithfulness": round(sum(r["faithfulness"] for r in results) / n, 3),
+    "avg_retrieval_relevance": round(sum(r["retrieval_relevance"] for r in results) / n, 3),
+    "avg_confidence": round(sum(r["confidence_composite"] for r in results) / n, 3),
+    "results": results,
+}
 
     # Print summary table
     table = Table(title=f"Evaluation Summary — {strategy_label} / {mode}", show_header=True)
