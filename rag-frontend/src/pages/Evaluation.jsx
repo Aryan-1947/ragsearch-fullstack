@@ -22,7 +22,7 @@ export default function Evaluation() {
   const theme = useTheme()
 
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto', padding: '48px 24px' }}>
+    <div style={{ maxWidth: 1000, margin: '0 auto', padding: '48px 24px', overflowX: 'hidden' }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <h1 style={{ fontSize: 32, fontWeight: 700, color: theme.text, marginBottom: 8 }}>Evaluation Results</h1>
         <p style={{ color: theme.textMuted, marginBottom: 40 }}>Golden Q&A dataset — recursive chunking / hybrid retrieval mode.</p>

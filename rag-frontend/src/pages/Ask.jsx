@@ -41,7 +41,7 @@ export default function Ask() {
 }
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto', padding: '48px 24px' }}>
+    <div style={{ maxWidth: 900, margin: '0 auto', padding: '48px 24px', overflowX: 'hidden' }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <h1 style={{ fontSize: 32, fontWeight: 700, color: theme.text, marginBottom: 8 }}>Ask your documents</h1>
         <p style={{ color: theme.textMuted, marginBottom: 40 }}>Get grounded answers with verified citations from your indexed documents.</p>

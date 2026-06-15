@@ -14,6 +14,13 @@ export default function Documents() {
   const [ingesting, setIngesting] = useState(false)
   const [message, setMessage] = useState(null)
   const [strategy, setStrategy] = useState('recursive')
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)  // 👈 added
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const load = async () => {
     try {
@@ -56,6 +63,7 @@ export default function Documents() {
   }
 
   return (
+    // ✅ outer wrapper restored exactly as original
     <div style={{ maxWidth: 900, margin: '0 auto', padding: '48px 24px' }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <h1 style={{ fontSize: 32, fontWeight: 700, color: theme.text, marginBottom: 8 }}>Documents</h1>
@@ -75,8 +83,13 @@ export default function Documents() {
           </div>
         )}
 
-        {/* Upload + Ingest */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 32 }}>
+        {/* Upload + Ingest — only gridTemplateColumns changes based on isMobile */}
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',  // 👈 only change
+          gap: 20, 
+          marginBottom: 32 
+        }}>
           <div style={{ background: theme.bgCard, border: `2px dashed ${theme.border}`, borderRadius: 16, padding: 32, textAlign: 'center' }}>
             <Upload size={32} color="#475569" style={{ marginBottom: 12 }} />
             <p style={{ color: theme.textMuted, marginBottom: 6, fontSize: 14 }}>Upload PDF, MD, TXT, or HTML</p>
