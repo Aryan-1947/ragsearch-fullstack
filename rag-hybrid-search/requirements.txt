@@ -31,7 +31,7 @@ python-multipart==0.0.9
 streamlit==1.36.0
 
 # Evaluation & Utils
-numpy==1.26.4
-pandas==2.2.2
+numpy==2.1.0
+pandas==2.2.3
 tqdm==4.66.4
 rich==13.7.1
