@@ -1,33 +1,26 @@
-# Core
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 python-dotenv==1.0.0
 pydantic==2.7.1
 
-# Document Loading
 pypdf==4.2.0
 beautifulsoup4==4.12.3
 lxml==5.2.2
 
-# Chunking (only the text-splitters subpackage is used, not full langchain)
 langchain-text-splitters==0.2.2
 
-# Embeddings & Vector Store — fastembed runs the same model class via ONNX
-# Runtime instead of PyTorch, avoiding ~1GB+ of torch/CUDA overhead that
-# doesn't fit in low-memory environments.
 chromadb==0.5.3
-fastembed==0.3.6
+sentence-transformers==3.0.1
+torch==2.3.1+cpu
 
-# Sparse Search
 rank-bm25==0.2.2
 
-# LLM
 groq==0.9.0
 
-# API
 fastapi==0.111.0
 uvicorn==0.30.1
 python-multipart==0.0.9
 
-# Utils
 tqdm==4.66.4
 rich==13.7.1
 httpx==0.27.0

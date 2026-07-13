@@ -1,32 +1,26 @@
 import numpy as np
 from rich.console import Console
-from fastembed import TextEmbedding
+from sentence_transformers import SentenceTransformer
 
 from app.config import LOCAL_EMBEDDING_MODEL
 from app.ingestion.chunker import Chunk
 
 console = Console()
 
-# Lazy-loaded singleton, same pattern as before — model loads on first use,
-# not at import time. fastembed runs BAAI/bge-small-en-v1.5 via ONNX Runtime
-# instead of PyTorch, which drastically cuts memory usage on low-RAM hosts
-# (e.g. Render's free 512MB tier) while keeping embeddings fully local and
-# rate-limit-free, same as before.
 _model = None
 
 
 def _get_model():
     global _model
     if _model is None:
-        console.print(f"[dim]Loading local embedding model (fastembed/ONNX): {LOCAL_EMBEDDING_MODEL}...[/dim]")
-        _model = TextEmbedding(model_name=LOCAL_EMBEDDING_MODEL)
+        console.print(f"[dim]Loading local embedding model: {LOCAL_EMBEDDING_MODEL}...[/dim]")
+        _model = SentenceTransformer(LOCAL_EMBEDDING_MODEL)
         console.print("[green]✅ Embedding model loaded[/green]")
     return _model
 
 
 def embed_text(text: str) -> list[float]:
-    # fastembed's embed() always returns a generator, even for one input.
-    embedding = next(_get_model().embed([text]))
+    embedding = _get_model().encode(text, normalize_embeddings=True)
     return embedding.tolist()
 
 
@@ -34,10 +28,15 @@ def embed_query(query: str) -> list[float]:
     return embed_text(query)
 
 
-def embed_chunks(chunks: list[Chunk], batch_size: int = 16) -> list[list[float]]:
+def embed_chunks(chunks: list[Chunk], batch_size: int = 32) -> list[list[float]]:
     console.print(f"\n[bold]Embedding {len(chunks)} chunks locally...[/bold]")
     texts = [c.content for c in chunks]
-    embeddings = list(_get_model().embed(texts, batch_size=batch_size))
+    embeddings = _get_model().encode(
+        texts,
+        batch_size=batch_size,
+        show_progress_bar=True,
+        normalize_embeddings=True,
+    )
     console.print(f"[green]✅ Embedded {len(embeddings)} chunks[/green]")
     return [e.tolist() for e in embeddings]
 
