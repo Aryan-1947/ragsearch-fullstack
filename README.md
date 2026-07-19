@@ -21,7 +21,7 @@ Each user gets their own private, isolated document space via Google/GitHub OAut
 - **Citation Verification** — Every claim checked against source chunks
 - **Confidence Scoring** — Composite score across retrieval, faithfulness, and completeness
 - **Dual Grounding Modes** — Strict (docs only) or Balanced (docs + general AI knowledge)
-- **Web Search Fallback** — Pull in live web results when your documents come up short
+- **Web Search Fallback** — Pull in live, context-aware web results when your documents come up short
 - **3 Chunking Strategies** — Fixed, Recursive (recommended), Semantic
 - **Drag-and-Drop Uploads** — With automatic duplicate-file handling
 - **Per-user Isolation** — Google/GitHub OAuth, each user's documents are private
@@ -54,7 +54,7 @@ Tested on a 10-question golden Q&A dataset (recursive chunking / hybrid retrieva
 | Backend | FastAPI + Python 3.11 |
 | Frontend | React + Vite + Tailwind |
 | Auth | Auth0 (Google + GitHub OAuth) |
-| Deployment | Render (backend) + Vercel (frontend) |
+| Deployment | Railway (backend) + Vercel (frontend) |
 | Chunking | LangChain Text Splitters |
 
 ---
@@ -64,8 +64,8 @@ Tested on a 10-question golden Q&A dataset (recursive chunking / hybrid retrieva
 1. Go to [aletheia-engine.vercel.app](https://aletheia-engine.vercel.app)
 2. Log in with Google or GitHub
 3. Go to **Documents** → upload a PDF/MD/TXT/HTML file (drag-and-drop supported)
-4. Select a chunking strategy (recursive recommended) → click **Run Ingestion**
+4. Select a chunking strategy (recursive recommended for speed) → click **Run Ingestion**
 5. Go to **Ask** → type your question, choose Strict or Balanced grounding
 6. Get a grounded answer with verified citations and a confidence score
 
-> ⚠️ **Note:** The backend runs on Render's free tier, which has limited memory and spins down after inactivity — the first request after a period of idle time may take up to ~50 seconds to respond.
+> ⚠️ **Note:** The backend runs on a free-tier trial instance with limited uptime — if the live demo is unresponsive, the hosting trial may have expired. The full pipeline runs reliably when self-hosted (see backend README for local setup).
