@@ -51,8 +51,8 @@ export const getDocumentViewUrl = (filename, userId) => {
   return `${base}/v1/documents/${encodeURIComponent(filename)}/view?user_id=${userId || 'default'}`
 }
 
-export const webSearch = (query) =>
-  api.post(`/v1/web-search?query=${encodeURIComponent(query)}`).then(r => r.data)
+export const webSearch = (query, context) =>
+  api.post(`/v1/web-search?query=${encodeURIComponent(query)}${context ? `&context=${encodeURIComponent(context)}` : ''}`).then(r => r.data)
 
 export const resetIngestedFiles = (userId) =>
   api.delete(`/v1/ingested-files?user_id=${userId || 'default'}`).then(r => r.data)

@@ -295,7 +295,7 @@ export default function Ask() {
                 onClick={async () => {
                   setWebLoading(true)
                   try {
-                    const data = await webSearch(query)
+                    const data = await webSearch(query, result.answer)
                     setWebResults(data.results)
                   } catch {} finally { setWebLoading(false) }
                 }}

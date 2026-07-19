@@ -270,9 +270,13 @@ async def view_document(filename: str, user_id: str = Query(default="default")):
 
 
 @app.post("/v1/web-search", tags=["RAG"])
-def web_search(query: str = Query(...)):
+def web_search(query: str = Query(...), context: str = Query(default=None)):
     from app.generation.web_search import search_web
-    results = search_web(query)
+    # Enrich the search with real document-grounded context (the RAG answer
+    # itself) so a vague question like "summarize the introduction" doesn't
+    # get interpreted generically by the search engine.
+    search_query = f"{query} — {context[:200]}" if context else query
+    results = search_web(search_query)
     return {"query": query, "results": results}
 
 

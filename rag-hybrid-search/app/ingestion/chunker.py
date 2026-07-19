@@ -75,7 +75,13 @@ def _cosine_similarity(a: list[float], b: list[float]) -> float:
 def semantic_chunk(doc: Document, threshold: float = 0.75, size: int = CHUNK_SIZE) -> list[Chunk]:
     from app.ingestion.embedder import embed_text
 
-    splitter = RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=0)
+    # Chunk at paragraph/sentence level (500 chars) instead of 200 — meaningfully
+    # fewer, larger base pieces to embed, which is what made semantic chunking
+    # slow (400+ tiny pieces vs ~150-200 with this size).
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=500, chunk_overlap=0,
+        separators=["\n\n", "\n", ". ", " "]
+    )
     base_pieces = splitter.split_text(doc.content)
 
     if len(base_pieces) <= 1:
